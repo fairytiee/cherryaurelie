@@ -20,16 +20,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      min-height: 100dvh; /* Menggunakan dvh agar lebih responsif di mobile UI */
       color: #fff;
       overflow: hidden;
+      margin: 0;
     }
 
     .app-container {
       width: 100%;
       max-width: 414px;
-      height: 100vh;
-      max-height: 896px;
+      height: 100dvh; /* Menggunakan dynamic viewport height agar bar browser tidak menutupi */
       background: linear-gradient(180deg, #2b1117 0%, #121212 100%);
       position: relative;
       overflow: hidden;
@@ -118,7 +118,7 @@
       display: none;
       flex-direction: column;
       height: 100%;
-      padding: 18px 20px;
+      padding: 35px 20px 20px 20px; /* Padding atas ditambah agar header tidak terpotong kamera/status bar HP */
       justify-content: flex-start;
       overflow-y: auto;
     }
@@ -440,7 +440,7 @@
       position: absolute;
       inset: 0;
       z-index: 100;
-      padding: 24px 20px;
+      padding: 40px 20px 24px 20px; /* Padding atas modal ditambah */
       flex-direction: column;
       animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       transition: background 0.4s ease;
