@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Spotify - Special Playlist for Aa Malik ❤️</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Circular Std", "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 414px;
+      height: 100vh;
+      max-height: 896px;
+      background: linear-gradient(180deg, #2b1117 0%, #121212 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+      transition: background 0.5s ease;
+    }
+
+    @media (min-height: 700px) and (min-width: 420px) {
+      .app-container {
+        height: 92vh;
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    /* Passcode Screen */
+    #lock-screen {
+      position: absolute;
+      inset: 0;
+      background: #121212;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .spotify-logo {
+      width: 50px;
+      height: 50px;
+      fill: #1db954;
+      margin-bottom: 20px;
+    }
+
+    .lock-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .lock-sub { font-size: 13px; color: #b3b3b3; margin-bottom: 28px; letter-spacing: 0.5px; }
+
+    .pw-input {
+      background: #282828;
+      border: 1px solid transparent;
+      padding: 14px 20px;
+      border-radius: 50px;
+      color: white;
+      font-size: 20px;
+      text-align: center;
+      letter-spacing: 6px;
+      outline: none;
+      width: 80%;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+    }
+
+    .pw-input:focus { border-color: #1db954; }
+
+    .unlock-btn {
+      background: #1db954;
+      color: #000;
+      border: none;
+      padding: 14px 44px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: transform 0.1s ease;
+    }
+
+    .unlock-btn:active { transform: scale(0.96); }
+
+    .error-msg {
+      color: #ff5252;
+      font-size: 12px;
+      margin-top: 14px;
+      display: none;
+      font-family: monospace;
+      letter-spacing: 0.3px;
+    }
+
+    /* Main Player View */
+    #player-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      padding: 18px 20px;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+
+    #player-screen::-webkit-scrollbar { width: 4px; }
+    #player-screen::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 4px;
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .header-subtitle {
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      color: #b3b3b3;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .header-title {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+      text-align: center;
+    }
+
+    /* Visual Media Area */
+    .album-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0 16px;
+      min-height: 270px;
+      position: relative;
+    }
+
+    .album-art {
+      width: 270px;
+      height: 270px;
+      border-radius: 8px;
+      background: #181818;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+      transition: transform 0.35s cubic-bezier(0.3, 0, 0, 1), box-shadow 0.35s ease;
+      transform: scale(0.93);
+    }
+
+    .album-art.playing {
+      transform: scale(1);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.85);
+    }
+
+    .mini-album-slider {
+      display: none;
+      width: 270px;
+      height: 270px;
+      position: relative;
+      perspective: 900px;
+    }
+
+    .slider-track {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slider-card {
+      width: 230px;
+      height: 230px;
+      border-radius: 8px;
+      position: absolute;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.85);
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      align-items: flex-end;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.7);
+    }
+
+    .slider-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.85) 100%);
+    }
+
+    .slider-card-caption {
+      position: relative;
+      z-index: 2;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    .slider-card.active {
+      transform: translateX(0) scale(1);
+      z-index: 5;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slider-card.prev {
+      transform: translateX(-40px) scale(0.86);
+      z-index: 3;
+      opacity: 0.4;
+    }
+
+    .slider-card.next {
+      transform: translateX(40px) scale(0.86);
+      z-index: 3;
+      opacity: 0.4;
+    }
+
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 10;
+      font-size: 13px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .slider-nav:active { transform: translateY(-50%) scale(0.9); }
+    .slider-nav.left { left: -8px; }
+    .slider-nav.right { right: -8px; }
+
+    .track-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+
+    .track-title { font-size: 19px; font-weight: 700; color: #fff; }
+    .track-artist { font-size: 13px; color: #b3b3b3; margin-top: 3px; }
+
+    .like-btn { 
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      transition: transform 0.15s ease;
+    }
+    .like-btn:active { transform: scale(1.25); }
+    .like-icon {
+      width: 24px;
+      height: 24px;
+      stroke: #b3b3b3;
+      fill: none;
+      stroke-width: 2;
+      transition: stroke 0.2s, fill 0.2s;
+    }
+    .like-btn.liked .like-icon {
+      stroke: #1db954;
+      fill: #1db954;
+    }
+
+    .progress-area { 
+      margin-bottom: 10px; 
+      padding: 0 4px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      touch-action: none;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: #1db954;
+      border-radius: 2px;
+      transition: width 0.05s linear;
+    }
+
+    .time-stamps {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #b3b3b3;
+      margin-top: 2px;
+    }
+
+    .player-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0 16px;
+    }
+
+    .control-btn {
+      background: none;
+      border: none;
+      color: #b3b3b3;
+      font-size: 24px;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.1s;
+    }
+
+    .control-btn:active { transform: scale(0.85); color: #fff; }
+
+    .play-main-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #1db954;
+      color: #000;
+      border: none;
+      font-size: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(29, 185, 84, 0.4);
+      transition: transform 0.1s;
+    }
+
+    .play-main-btn:active { transform: scale(0.92); }
+
+    /* Spotify Dynamic Lyrics Card */
+    .lyrics-card {
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: background 0.4s ease, border-color 0.4s ease;
+      position: relative;
+    }
+
+    .lyrics-header {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #1db954;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lyrics-preview-container {
+      max-height: 86px;
+      overflow-y: hidden;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      scroll-behavior: smooth;
+    }
+
+    .lyric-line {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.35);
+      transition: color 0.25s ease;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .lyric-line.active {
+      color: #ffffff;
+    }
+
+    /* Full Lyrics Overlay Modal */
+    .lyrics-modal {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      padding: 24px 20px;
+      flex-direction: column;
+      animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background 0.4s ease;
+      overflow: hidden;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .lyrics-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .lyrics-modal-close {
+      font-size: 20px;
+      background: rgba(0,0,0,0.3);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .lyrics-modal-body {
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
+      padding: 40px 10px 120px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+    }
+
+    .lyrics-modal-body::-webkit-scrollbar { 
+      width: 4px;
+      height: 0px; 
+    }
+    .lyrics-modal-body::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+    }
+
+    .modal-lyric-line {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.35);
+      transition: color 0.25s ease, opacity 0.25s ease;
+      cursor: pointer;
+      word-break: break-word;
+      white-space: normal;
+    }
+
+    .modal-lyric-line:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .modal-lyric-line.active {
+      color: #ffffff;
+      font-size: 19px;
+    }
+
+    /* Playlist Section */
+    .playlist-section { margin-bottom: 14px; }
+
+    .playlist-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .playlist-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      cursor: pointer;
+      margin-bottom: 4px;
+    }
+
+    .playlist-item:active, .playlist-item.active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .item-num { 
+      font-size: 13px; 
+      color: #b3b3b3; 
+      width: 16px; 
+      text-align: center;
+    }
+
+    .playlist-item.active .item-num {
+      color: #1db954;
+      font-weight: 700;
+    }
+
+    .item-info { display: flex; flex-direction: column; }
+
+    .item-title { 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: #fff;
+    }
+
+    .playlist-item.active .item-title { color: #1db954; }
+
+    .item-sub { font-size: 11px; color: #b3b3b3; margin-top: 2px; }
+
+    .item-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #b3b3b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio Element -->
+  <audio id="real-audio-player" preload="metadata"></audio>
+  <audio id="click-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+
+  <div class="app-container" id="app-box">
+    
+    <!-- Passcode Screen -->
+    <div id="lock-screen">
+      <svg class="spotify-logo" viewBox="0 0 167.5 167.5">
+        <path d="M83.7 0C37.5 0 0 37.5 0 83.7c0 46.3 37.5 83.7 83.7 83.7 46.3 0 83.7-37.5 83.7-83.7C167.5 37.5 130 0 83.7 0zm38.4 121.6c-1.5 2.5-4.7 3.2-7.2 1.8-19.7-12-44.6-14.8-73.9-8.1-2.8.6-5.6-1.2-6.2-4-.6-2.8 1.2-5.6 4-6.2 32.1-7.3 59.7-4.1 81.6 9.3 2.5 1.5 3.2 4.7 1.7 7.2zm10.2-22.8c-1.9 3-5.9 4-8.9 2-22.6-13.9-57-18-83.7-9.8-3.4 1-7-1-8-4.4-1-3.4 1-7 4.4-8 30.6-9.3 68.7-4.8 94.3 11 3 1.9 3.9 5.9 1.9 9.2zm.9-23.7c-27.1-16.1-71.8-17.6-97.5-9.8-4.1 1.2-8.5-1.1-9.8-5.2-1.2-4.1 1.1-8.5 5.2-9.8 29.6-9 79-7.2 110.2 11.3 3.7 2.2 4.9 7 2.7 10.7-2.2 3.8-7 5-10.8 2.8z"/>
+      </svg>
+      <div class="lock-title">Special Playlist Locked</div>
+      <div class="lock-sub">Dedicated to Malik Baskara</div>
+      <input type="password" id="pw-input" class="pw-input" inputmode="numeric" maxlength="6" placeholder="••••••" onkeydown="if(event.key==='Enter') checkPasscode()">
+      <button class="unlock-btn" onclick="checkPasscode()">Unlock</button>
+      <div id="error-msg" class="error-msg">Kode otentikasi tidak valid. Akses ditolak.</div>
+    </div>
+
+    <!-- Main Player Screen -->
+    <div id="player-screen">
+      
+      <div class="player-header">
+        <span style="font-size: 18px; cursor: pointer;">❮</span>
+        <div>
+          <div class="header-subtitle">PLAYING FROM PLAYLIST</div>
+          <div class="header-title">99,9% in love with you</div>
+        </div>
+        <span style="font-size: 18px; cursor: pointer;">•••</span>
+      </div>
+
+      <!-- Album Cover / Media Area -->
+      <div class="album-container">
+        <div class="album-art" id="album-art"></div>
+
+        <div class="mini-album-slider" id="mini-slider">
+          <div class="slider-nav left" onclick="slideAlbum(-1)">❮</div>
+          <div class="slider-track" id="slider-track"></div>
+          <div class="slider-nav right" onclick="slideAlbum(1)">❯</div>
+        </div>
+      </div>
+
+      <!-- Track Details -->
+      <div>
+        <div class="track-info">
+          <div>
+            <div class="track-title" id="display-title">Where I Belong</div>
+            <div class="track-artist" id="display-artist">Cherry Aurelie ft. Malik Baskara</div>
+          </div>
+          <button class="like-btn liked" id="like-btn" onclick="toggleLike(this)" title="Save to Your Library">
+            <svg class="like-icon" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-area">
+          <div class="progress-bar-container" id="progress-container">
+            <div class="progress-track">
+              <div class="progress-bar" id="progress-bar"></div>
+            </div>
+          </div>
+          <div class="time-stamps">
+            <span id="current-time">0:00</span>
+            <span id="total-time">0:00</span>
+          </div>
+        </div>
+
+        <!-- Player Controls -->
+        <div class="player-controls">
+          <button class="control-btn" onclick="prevTrack()">⏮</button>
+          <button class="play-main-btn" id="play-btn" onclick="togglePlay()">▶</button>
+          <button class="control-btn" onclick="nextTrack()">⏭</button>
+        </div>
+      </div>
+
+      <!-- Lyrics Dynamic Card -->
+      <div class="lyrics-card" id="lyrics-card" onclick="openLyricsModal()">
+        <div class="lyrics-header">
+          <span id="lyrics-header">TRACK 01 • MESSAGE</span>
+          <span style="font-size: 10px; text-transform: uppercase; background: rgba(29, 185, 84, 0.2); padding: 2px 6px; border-radius: 4px;">Tap to Expand ↗</span>
+        </div>
+        <div class="lyrics-preview-container" id="lyrics-preview"></div>
+      </div>
+
+      <!-- 3 Tracks Playlist -->
+      <div class="playlist-section">
+        <div class="playlist-title">
+          <span>Tracks in Playlist</span>
+          <span style="font-size: 11px; color: #b3b3b3; font-weight: 400;">3 Tracks</span>
+        </div>
+        
+        <div class="playlist-item active" id="item-1" onclick="switchTrack(1)">
+          <div class="item-left">
+            <div class="item-num" id="num-1">1</div>
+            <div class="item-info">
+              <div class="item-title">Where I Belong</div>
+              <div class="item-sub">Cherry Aurelie • Utama</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span id="duration-badge-1">--:--</span>
+          </div>
+        </div>
+
+        <div class="playlist-item" id="item-2" onclick="switchTrack(2)">
+          <div class="item-left">
+            <div class="item-num" id="num-2">2</div>
+            <div class="item-info">
+              <div class="item-title">Hanya Untukmu</div>
+              <div class="item-sub">Ten2Five • 13 Moments</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span id="duration-badge-2">--:--</span>
+          </div>
+        </div>
+
+        <div class="playlist-item" id="item-3" onclick="switchTrack(3)">
+          <div class="item-left">
+            <div class="item-num" id="num-3">3</div>
+            <div class="item-info">
+              <div class="item-title">At My Side</div>
+              <div class="item-sub">Cherry Aurelie • At My Side</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span id="duration-badge-3">--:--</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Full Lyrics Overlay Modal -->
+    <div id="lyrics-modal" class="lyrics-modal">
+      <div class="lyrics-modal-header">
+        <div>
+          <div id="modal-track-title" style="font-size: 14px; font-weight: 700;">Where I Belong</div>
+          <div id="modal-track-artist" style="font-size: 11px; color: rgba(255,255,255,0.8);">Cherry Aurelie ft. Malik Baskara</div>
+        </div>
+        <div class="lyrics-modal-close" onclick="closeLyricsModal()">✕</div>
+      </div>
+      <div class="lyrics-modal-body" id="modal-lyrics-body"></div>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('click', function(e) {
+      const isClickable = e.target.closest('button, .playlist-item, .slider-nav, .lyrics-modal-close, .lyrics-card, .progress-bar-container, .modal-lyric-line, .unlock-btn');
+      if (isClickable) {
+        const clickSfx = document.getElementById('click-sound');
+        if (clickSfx) {
+          clickSfx.currentTime = 0;
+          clickSfx.volume = 0.15;
+          clickSfx.play().catch(err => console.warn("Efek klik:", err));
+        }
+      }
+    });
+
+    // Helper untuk konversi format string "mm:ss" atau detik murni jadi format detik murni
+    function parseLyrics(lines) {
+      return lines.map((item, idx) => {
+        if (typeof item === 'string') {
+          return { t: idx * 5, text: item };
+        }
+        if (typeof item.t === 'string') {
+          const parts = item.t.split(':');
+          const sec = parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+          return { t: sec, text: item.text };
+        }
+        return item;
+      });
+    }
+
+    const rawTracks = {
+      1: {
+        title: "Where I Belong",
+        artist: "Cherry Aurelie ft. Malik Baskara",
+        src: "ceritaku.mp4",
+        cover: "eye.jpeg", 
+        color: "linear-gradient(180deg, #3b111a 0%, #121212 100%)",
+        cardBg: "rgba(225, 29, 72, 0.14)",
+        modalBg: "linear-gradient(180deg, #881337 0%, #121212 75%)",
+        bgColor: "#1c0d12",
+        isSlider: false,
+        header: "TRACK 01 • UTAMA",
+        lines: [
+          "Haloo, aa sayangg",
+          "Kalau aa lagi baca ini,",
+          "itu artinya ini sudah hari H dimana kita mensive ke yang 3 bulan yaaaa?",
+          "aku uda lama banget bikin ini and wondering bakal kesampean kasi ke aa ga ya?",
+          "tapi ngeliat aa dapet web ini itu artinya kita berhasil pertahanin hubungan sejauh inii yeyyy",
+          "Ngga kerasa ya a, waktu berjalan cepat banget.",
+          "Kalau ditarik garis ke belakang, rasanya baru kemarin kita mensive ke 2.",
+          "Sekarang, kalau dihitung-hitung, sudah 4 bulan kita saling mengenal,",
+          "dan genap 3 bulan kita resmi berstatus pacaran wkwkwk.",
+          "Angka 3 bulan ini mungkin baru permulaan kalau dibandingin sama waktu-waktu ke depan yang semoga masih panjang banget kita milikin.",
+          "Aku masih ingat gimana awalnya kita bisa dekat.",
+          "Dari random fpap, saling kabar-kabaran ahahaha.",
+          "Selama 3 bulan kita ini, aku belajar banyak hal tentang arti menghargai, dan merasa cukup.",
+          "aa tau ga?",
+          "Bukan cuma karna status pacaran atau karna chat aa yang lucu aja yang bikin aku bertahan dan makin sayang sama aa.",
+          "Justru hal-hal kecil di keseharian kita yang bikin aku sadar kalau aku lagi sama orang yang tepat.",
+          "Cara aa ngedengerin cerita-ceritaku,",
+          "cara aa sabar waktu aku lagi rewel atau banyak pikiran,",
+          "dan cara aa selalu berusaha ngasih kabar di tengah kesibukan aa—semua itu nggak pernah luput dari mataku.",
+          "aa baik, aa penyayang, aa pengertian, aa selalu dengerin aku.",
+          "how can I not fall deeper in love with you a?",
+          "you already know that i adore you so much, and thats never gonna change.",
+          "dari yang awalnya aku ga pd, jadi pd dalam hal apapun,",
+          "dari yang aku takut nyoba hal baru, jadi pengen bisa semua.",
+          "aku selalu pengen berkembang dan belajar banyak hal supaya aa bisa selalu ngandelin aku.",
+          "aku pengen aa juga bisa minta tolong terus ke aku, like i always do to you.",
+          "Hidup kita kan nggak selalu mulus ya, a.",
+          "Pasti ada hari-hari di mana kita sama-sama pusing sama urusan masing-masing—aku dengan urusan kuliah, tugas, aktivitas harian, kerja dan aa dengan kesibukanmu sendiri.",
+          "Tapi, entah kenapa, tahu kalau ada aa di ujung hari someone yang bisa diajak keluh kesah, someone yang siap jadi pendengar tanpa dihakimin itu udah jadi separuh obat penenang buat capek aku.",
+          "Terima kasih ya, aa.",
+          "Terima kasih karena nggak pernah pergi waktu keadaan lagi nggak ideal, dan tetap tinggal untuk merangkul segala kekurangan aku.",
+          "Kadang aku takjub sendiri sama diri kita.",
+          "Waktu awal kenal, kita kan dua kepala yang berbeda, punya kebiasaan, pemikiran, dan cerita masa lalu yang nggak sama.",
+          "Tapi pelan-pelan, lewat kompromi kecil, kita berhasil merajut sebuah ruang aman berdua.",
+          "Ruang di mana aku bisa jadi diri aku seutuhnya di depan aa, tanpa takut keliatan konyol atau nggak sempurna.",
+          "Aku mau berterima kasih untuk setiap detik yang sudah aa luangkan buat aku.",
+          "Terima kasih untuk usaha aa,",
+          "untuk perhatian-perhatian kecil yang kadang nggak aa duga tapi bikin aku nyaman,",
+          "dan untuk keputusan aa memilih aku untuk jadi pacar aa.",
+          "Aku tau, kita masih punya jalan yang panjang banget di depan sana.",
+          "Masih bakal banyak kejutan, tantangan, atau mungkin bedanya pendapat yang bakal kita temui ke depannya.",
+          "Tapi, kalau itu sama aa, aku nggak takut.",
+          "Aku justru antusias buat ngelewatin semuanya bareng-bareng.",
+          "Lewat ini, aku cuma mau mengingatkan aa dan juga diriku sendiri kalau aku bangga sama aa.",
+          "Bangga sama cara aa berproses, bangga sama usaha aa setiap hari,",
+          "dan bangga karena kita berhasil menjaga hubungan ini tetap hangat sampai di titik 3 bulan ini.",
+          "Selamat 3 bulan jadian, ya, aa sayangg.",
+          "Terima kasih sudah hadir, bertahan, and love me selama 4 bulan kenal dan 3 bulan kita resmi bersama ini.",
+          "Semoga ke depannya kita bisa tetep bareng dan saling mendoakan dalam diam maupun terang,",
+          "dan terus tumbuh jadi versi manusia yang lebih baik lagi baik untuk diri kita sendiri, maupun untuk satu sama lain.",
+          "I love you, yesterday, today, tomorrow, and hopefully, for all the days after that.",
+          "Peluk jauh buat aa sayangg <3"
+        ]
+      },
+      2: {
+        title: "Hanya Untukmu",
+        artist: "Ten2Five",
+        src: "hanya-untukmu.mp4",
+        cover: "",
+        color: "linear-gradient(180deg, #132442 0%, #121212 100%)",
+        cardBg: "rgba(37, 99, 235, 0.16)",
+        modalBg: "linear-gradient(180deg, #1e3a8a 0%, #121212 75%)",
+        bgColor: "linear-gradient(135deg, #2563eb, #1e3a8a)",
+        isSlider: true,
+        photos: [
+          "1s.jpeg", "2s.jpeg", "3s.jpeg", "4s.jpeg", "5s.jpeg",
+          "6s.jpeg", "7s.jpeg", "8s.jpeg", "9s.jpeg", "10s.jpeg",
+          "11s.jpeg", "12s.jpeg", "13s.jpeg"
+        ],
+        header: "TRACK 02 • 13 MOMENTS",
+        lines: [
+          { t: "0:21", text: "Inikah rasanya bila ku sedang jatuh cinta" },
+          { t: "0:33", text: "Setiap hela nafasku bahagia" },
+          { t: "0:44", text: "Mengenal hatimu hadirkan indahnya dunia" },
+          { t: "0:56", text: "Kau bawa irama cinta di jiwa" }
+        ]
+      },
+      3: {
+        title: "At My Side",
+        artist: "Cherry Aurelie",
+        src: "vn.mp4",
+        cover: "atmyside.jpeg",
+        color: "linear-gradient(180deg, #093322 0%, #121212 100%)",
+        cardBg: "rgba(5, 150, 105, 0.16)",
+        modalBg: "linear-gradient(180deg, #064e3b 0%, #121212 75%)",
+        bgColor: "#093322",
+        isSlider: false,
+        header: "TRACK 03 • AT MY SIDE",
+        lines: [
+          { t: "0:00", text: "Halo... halo halo halo! Selamat datang lagi di podcast paling eksklusif, paling private sejagat raya." },
+          { t: "0:09", text: "Yang pendengar ini pastinya VIP karena cuma satu orang di dunia, yaitu pacar aku, Aa Malik, yang bisa buka web ini..." },
+          { t: "0:19", text: "...dan bisa ndengerin podcast atau apa ya sebutannya ini ya? VN ya? Eh bukan VN deh, podcast-lah ya." },
+          { t: "0:26", text: "Podcast ini dengan aku, Cherie Aurelie, host kesayangan Aa—eh, pacar kesayangan, deng—" },
+          { t: "0:35", text: "...yang bakal nemenin Aa buat ngelihat apa sih yang bikin aku, eh apa sih yang aku bikin di sini di spesial hari ini." },
+          { t: "0:46", text: "Kenapa sih spesial? Karena hari ini kita lagi ngerayain mensiv kita yang ketiga. Iya, betul, ketiga, ya." },
+          { t: "0:57", text: "Gila ya Aa, 3 bulan lho. Kalau dipikir-pikir cepat banget." },
+          { t: "1:04", text: "Padahal semenjak tanggal 29 Juli, itu tuh kita masih malu-malu—eh enggak deng, kita enggak pernah malu-malu deh." },
+          { t: "1:13", text: "Rasanya tuh kayak baru kemarin sumpah, kita tuh baru kemarin aku bikinin Aa yang mensiv ke-2 bulan itu, tiba-tiba sudah ketiga gitu ya." },
+          { t: "1:23", text: "Oke, lewat ini, aku cuma mau ngambil waktu buat appreciation post jalur suara." },
+          { t: "1:30", text: "Aku mau bilang makasih, makasih banyak sama pacar aku." },
+          { t: "1:34", text: "Di 3 bulan ini rasanya jauh lebih gampang dan berwarna karena ada Aa." },
+          { t: "1:41", text: "Makasih juga udah selalu sabar ngadepin aku." },
+          { t: "1:45", text: "Makasih udah jadi tempat cerita paling asyik, apalagi pas aku lagi capek atau lagi riweh banget." },
+          { t: "1:53", text: "Habis ngajar bimbel, atau pas aku lagi kepanasan, atau pas lagi mati lampu. Eh, Balikpapan emang banyak ininya ya, gedebak-gedebuknya." },
+          { t: "2:05", text: "Kok bisa ya ada orang kayak Aa ya?" },
+          { t: "2:09", text: "Aku... ini kita bicara santai ya. Kok bisa ada orang yang senyaman ini buat dijadiin tempat pulang?" },
+          { t: "2:19", text: "Selalu ya, selalu siap dengerin celotehan aku, sekocak apa pun itu." },
+          { t: "2:24", text: "Bahkan pas aku lagi sibuk-sibuknya ngurusin UKM, ngurusin tugas bahasa Inggris itu, Aa tuh bisa ngertiin, bisa nyesuaiin aku." },
+          { t: "2:34", text: "Kayak, you are the best support system ever." },
+          { t: "2:38", text: "Eh maaf ya Aa, kalau selama 3 bulan ini aku masih suka banyak kurangnya." },
+          { t: "2:44", text: "Masih suka ngambek-ngambek enggak jelas atau tiba-tiba nyalahin, nuduh-nuduh Aa yang begini yang gitu." },
+          { t: "2:51", text: "Tapi satu yang pasti, porsi sayang aku tuh jauh lebih gede daripada aku marah-marah ke Aa." },
+          { t: "2:59", text: "Oh iya, kalau di podcast beneran itu kan biasanya suka ada request lagu ya?" },
+          { t: "3:04", text: "Anggap aja habis ini, habis Aa dengar lagu ini, dengerinlah lagu-lagu yang tadi aku taruh di track 1 sama track 2." },
+          { t: "3:15", text: "Aku simpan lagu 'Hanya Untukmu' sama apa satunya aku lupa deh judulnya. Itulah ya intinya." },
+          { t: "3:22", text: "Oke, selanjutnya, harapan aku buat kita ke depannya semoga kita berdua makin sabar, makin bisa nurunin ego masing-masing..." },
+          { t: "3:34", text: "...makin saling ngertiin, dan tentunya makin banyak momen seru yang bisa kita jalanin bareng-bareng." },
+          { t: "3:42", text: "Aku enggak sabar banget buat kayak ngerayain mensiv-mensiv selanjutnya." },
+          { t: "3:48", text: "Mensiv ke-4, ke-5, ke-6, ke-7, ke-8, ke-9, ke-10, ke-11, ke-1 tahun! Kayak, oh my God. Enggak sabar deh." },
+          { t: "3:59", text: "Oke deh, sekian dari aku, Cherie Aurelie atau biasa dipanggil Cherie dari host favorit Aa." },
+          { t: "4:06", text: "Jangan lupa senyum hari ini dan jangan lupa buat di-like ya. Itu kan ada tombol like-nya ya di sebelah kanan." },
+          { t: "4:14", text: "Biar kalau pengin dengerin lagi, bisa di... eh bisa dibuka lagi sih sebenarnya." },
+          { t: "4:23", text: "Oke, happy 3rd-mensiv ya Aa sayang. I love you so much, more than you know, more than my mind can define. Mwah!" }
+        ]
+      }
+    };
+
+    // Pre-calculate parsed lyrics
+    const tracks = {};
+    for (let key in rawTracks) {
+      tracks[key] = {
+        ...rawTracks[key],
+        parsedLines: parseLyrics(rawTracks[key].lines)
+      };
+    }
+
+    let currentTrackId = 1;
+    let isPlaying = false;
+    let currentLineIndex = 0;
+    let currentSlide = 0;
+    let isDragging = false;
+    let isUserScrollingModal = false;
+    let scrollTimeout;
+
+    const audioPlayer = document.getElementById('real-audio-player');
+
+    function checkPasscode() {
+      const input = document.getElementById('pw-input').value.trim();
+      const error = document.getElementById('error-msg');
+      if (input === '290526') {
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('player-screen').style.display = 'flex';
+        loadTrack(1);
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+        }
+      } else {
+        error.style.display = 'block';
+        document.getElementById('pw-input').style.borderColor = '#ff5252';
+      }
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds) || seconds <= 0) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function switchTrack(trackId) {
+      if (isPlaying) pauseAudio();
+      currentTrackId = trackId;
+      loadTrack(trackId);
+      playAudio();
+    }
+
+    function loadTrack(id) {
+      const track = tracks[id];
+      currentLineIndex = 0;
+
+      audioPlayer.src = track.src;
+      audioPlayer.load();
+
+      document.getElementById('app-box').style.background = track.color;
+      document.getElementById('lyrics-card').style.background = track.cardBg;
+      document.getElementById('lyrics-modal').style.background = track.modalBg;
+
+      document.getElementById('display-title').innerText = track.title;
+      document.getElementById('display-artist').innerText = track.artist;
+      document.getElementById('lyrics-header').innerText = track.header;
+
+      document.getElementById('current-time').innerText = "0:00";
+      document.getElementById('total-time').innerText = "0:00";
+      document.getElementById('progress-bar').style.width = "0%";
+
+      document.getElementById('modal-track-title').innerText = track.title;
+      document.getElementById('modal-track-artist').innerText = track.artist;
+
+      const albumArt = document.getElementById('album-art');
+      const miniSlider = document.getElementById('mini-slider');
+
+      if (track.isSlider) {
+        albumArt.style.display = 'none';
+        miniSlider.style.display = 'block';
+        buildPhotoSlider(track.photos);
+      } else {
+        albumArt.style.display = 'block';
+        miniSlider.style.display = 'none';
+
+        if (track.cover) {
+          albumArt.style.backgroundColor = track.bgColor;
+          albumArt.style.backgroundImage = `url('${track.cover}')`;
+          albumArt.style.backgroundSize = 'cover';
+        } else {
+          albumArt.style.backgroundImage = 'none';
+          albumArt.style.background = track.bgColor;
+        }
+      }
+
+      renderLyrics(track.parsedLines);
+      highlightCurrentLyric(0);
+
+      for (let i = 1; i <= 3; i++) {
+        const item = document.getElementById(`item-${i}`);
+        const num = document.getElementById(`num-${i}`);
+        if (i === id) {
+          item.classList.add('active');
+          num.innerText = isPlaying ? '❚❚' : '▶';
+        } else {
+          item.classList.remove('active');
+          num.innerText = i;
+        }
+      }
+    }
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+      const dur = audioPlayer.duration;
+      document.getElementById('total-time').innerText = formatTime(dur);
+      const badge = document.getElementById(`duration-badge-${currentTrackId}`);
+      if (badge) badge.innerText = formatTime(dur);
+
+      const track = tracks[currentTrackId];
+      if (typeof rawTracks[currentTrackId].lines[0] === 'string') {
+        const step = dur / track.parsedLines.length;
+        track.parsedLines.forEach((item, idx) => {
+          item.t = idx * step;
+        });
+      }
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+      if (!isDragging && audioPlayer.duration) {
+        const currentSec = audioPlayer.currentTime;
+        const totalSec = audioPlayer.duration;
+
+        const pct = (currentSec / totalSec) * 100;
+        document.getElementById('progress-bar').style.width = pct + '%';
+        document.getElementById('current-time').innerText = formatTime(currentSec);
+
+        syncLyricToTime(currentSec);
+      }
+    });
+
+    audioPlayer.addEventListener('seeked', () => {
+      syncLyricToTime(audioPlayer.currentTime);
+    });
+
+    function syncLyricToTime(currentTime) {
+      const lines = tracks[currentTrackId].parsedLines;
+      let activeIdx = 0;
+      for (let i = 0; i < lines.length; i++) {
+        if (currentTime >= lines[i].t) {
+          activeIdx = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIdx !== currentLineIndex && !isUserScrollingModal) {
+        highlightCurrentLyric(activeIdx);
+      }
+    }
+
+    audioPlayer.addEventListener('ended', () => {
+      nextTrack();
+    });
+
+    function renderLyrics(parsedLines) {
+      const previewContainer = document.getElementById('lyrics-preview');
+      const modalContainer = document.getElementById('modal-lyrics-body');
+
+      previewContainer.innerHTML = '';
+      modalContainer.innerHTML = '';
+
+      parsedLines.forEach((item, index) => {
+        const pLine = document.createElement('div');
+        pLine.className = 'lyric-line' + (index === 0 ? ' active' : '');
+        pLine.id = `prev-line-${index}`;
+        pLine.innerText = item.text;
+        previewContainer.appendChild(pLine);
+
+        const mLine = document.createElement('div');
+        mLine.className = 'modal-lyric-line' + (index === 0 ? ' active' : '');
+        mLine.id = `modal-line-${index}`;
+        mLine.innerText = item.text;
+        
+        mLine.onclick = () => {
+          if (audioPlayer.duration) {
+            audioPlayer.currentTime = item.t;
+            highlightCurrentLyric(index);
+            if (!isPlaying) playAudio();
+          }
+        };
+        modalContainer.appendChild(mLine);
+      });
+    }
+
+    function highlightCurrentLyric(index) {
+      currentLineIndex = index;
+      const total = tracks[currentTrackId].parsedLines.length;
+
+      for (let i = 0; i < total; i++) {
+        const p = document.getElementById(`prev-line-${i}`);
+        const m = document.getElementById(`modal-line-${i}`);
+        if (p) p.classList.toggle('active', i === index);
+        if (m) m.classList.toggle('active', i === index);
+      }
+
+      const activeP = document.getElementById(`prev-line-${index}`);
+      if (activeP) {
+        activeP.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      const activeM = document.getElementById(`modal-line-${index}`);
+      if (activeM && document.getElementById('lyrics-modal').style.display === 'flex' && !isUserScrollingModal) {
+        activeM.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function buildPhotoSlider(photos) {
+      const track = document.getElementById('slider-track');
+      track.innerHTML = '';
+      currentSlide = 0;
+
+      photos.forEach((photoName, i) => {
+        const card = document.createElement('div');
+        card.className = 'slider-card';
+        card.id = `slide-${i}`;
+        card.style.backgroundImage = `url('${photoName}')`;
+
+        const caption = document.createElement('span');
+        caption.className = 'slider-card-caption';
+        caption.innerText = `Moment #${i + 1} • `;
+
+        card.appendChild(caption);
+        track.appendChild(card);
+      });
+
+      updateSliderView();
+    }
+
+    function slideAlbum(dir) {
+      const cards = document.querySelectorAll('.slider-card');
+      if (!cards.length) return;
+      currentSlide = (currentSlide + dir + cards.length) % cards.length;
+      updateSliderView();
+    }
+
+    function updateSliderView() {
+      const cards = document.querySelectorAll('.slider-card');
+      const total = cards.length;
+      if (!total) return;
+
+      cards.forEach((card, i) => {
+        card.className = 'slider-card';
+        if (i === currentSlide) {
+          card.classList.add('active');
+        } else if (i === (currentSlide - 1 + total) % total) {
+          card.classList.add('prev');
+        } else if (i === (currentSlide + 1) % total) {
+          card.classList.add('next');
+        }
+      });
+    }
+
+    const miniSliderEl = document.getElementById('mini-slider');
+    let touchStartX = 0;
+
+    miniSliderEl.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    miniSliderEl.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 45) {
+        slideAlbum(1);
+      } else if (touchEndX - touchStartX > 45) {
+        slideAlbum(-1);
+      }
+    }, { passive: true });
+
+    function openLyricsModal() {
+      const modal = document.getElementById('lyrics-modal');
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        const activeM = document.getElementById(`modal-line-${currentLineIndex}`);
+        if (activeM) activeM.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+
+    function closeLyricsModal() {
+      document.getElementById('lyrics-modal').style.display = 'none';
+    }
+
+    const modalBody = document.getElementById('modal-lyrics-body');
+
+    modalBody.addEventListener('scroll', () => {
+      isUserScrollingModal = true;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isUserScrollingModal = false;
+      }, 1200);
+    });
+
+    function nextTrack() {
+      let nextId = currentTrackId + 1;
+      if (nextId > 3) nextId = 1;
+      switchTrack(nextId);
+    }
+
+    function prevTrack() {
+      let prevId = currentTrackId - 1;
+      if (prevId < 1) prevId = 3;
+      switchTrack(prevId);
+    }
+
+    function togglePlay() {
+      if (!isPlaying) playAudio();
+      else pauseAudio();
+    }
+
+    function playAudio() {
+      isPlaying = true;
+      document.getElementById('play-btn').innerHTML = '❚❚';
+      document.getElementById('album-art').classList.add('playing');
+      document.getElementById(`num-${currentTrackId}`).innerText = '❚❚';
+      
+      audioPlayer.play().catch(e => {
+        console.warn("Autoplay terhalang kebijakan browser atau file tidak ditemukan:", e);
+      });
+    }
+
+    function pauseAudio() {
+      isPlaying = false;
+      document.getElementById('play-btn').innerHTML = '▶';
+      document.getElementById('album-art').classList.remove('playing');
+      document.getElementById(`num-${currentTrackId}`).innerText = '▶';
+      
+      audioPlayer.pause();
+    }
+
+    const progressContainer = document.getElementById('progress-container');
+
+    function handleSeek(clientX) {
+      if (!audioPlayer.duration) return;
+      const rect = progressContainer.getBoundingClientRect();
+      let pos = (clientX - rect.left) / rect.width;
+      if (pos < 0) pos = 0;
+      if (pos > 1) pos = 1;
+
+      const targetSec = pos * audioPlayer.duration;
+      audioPlayer.currentTime = targetSec;
+      
+      document.getElementById('progress-bar').style.width = (pos * 100) + '%';
+      document.getElementById('current-time').innerText = formatTime(targetSec);
+
+      syncLyricToTime(targetSec);
+    }
+
+    progressContainer.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      handleSeek(e.clientX);
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (isDragging) handleSeek(e.clientX);
+    });
+
+    window.addEventListener('pointerup', () => {
+      isDragging = false;
+    });
+
+    function toggleLike(btn) {
+      btn.classList.toggle('liked');
+      if (btn.classList.contains('liked') && typeof confetti === 'function') {
+        confetti({ particleCount: 25, spread: 45, origin: { y: 0.7 } });
+      }
+    }
+  </script>
+</body>
+</html>
