@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Spotify - Special Playlist for aa sayangg</title>
+  <title>Happy 3rd Monthversary aa sayangg</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * {
@@ -20,7 +20,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100dvh; /* Menggunakan dvh agar lebih responsif di mobile UI */
+      min-height: 100dvh;
       color: #fff;
       overflow: hidden;
       margin: 0;
@@ -29,7 +29,7 @@
     .app-container {
       width: 100%;
       max-width: 414px;
-      height: 100dvh; /* Menggunakan dynamic viewport height agar bar browser tidak menutupi */
+      height: 100dvh;
       background: linear-gradient(180deg, #2b1117 0%, #121212 100%);
       position: relative;
       overflow: hidden;
@@ -118,7 +118,7 @@
       display: none;
       flex-direction: column;
       height: 100%;
-      padding: 35px 20px 20px 20px; /* Padding atas ditambah agar header tidak terpotong kamera/status bar HP */
+      padding: 24px 20px 20px 20px;
       justify-content: flex-start;
       overflow-y: auto;
     }
@@ -133,7 +133,28 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .back-btn-icon {
+      font-size: 18px;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .header-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .header-subtitle {
@@ -142,14 +163,42 @@
       color: #b3b3b3;
       text-transform: uppercase;
       font-weight: 600;
-      text-align: center;
     }
 
     .header-title {
       font-size: 12px;
       font-weight: 700;
       margin-top: 2px;
-      text-align: center;
+    }
+
+    /* Dropdown Menu Titik 3 */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 35px;
+      background: rgba(40, 40, 40, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      z-index: 120;
+      width: 160px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .dropdown-item {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255,255,255,0.1);
+      color: #1db954;
     }
 
     /* Visual Media Area */
@@ -158,14 +207,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 10px 0 16px;
-      min-height: 270px;
+      margin: 6px 0 14px;
+      min-height: 250px;
       position: relative;
     }
 
     .album-art {
-      width: 270px;
-      height: 270px;
+      width: 250px;
+      height: 250px;
       border-radius: 8px;
       background: #181818;
       background-size: cover;
@@ -183,8 +232,8 @@
 
     .mini-album-slider {
       display: none;
-      width: 270px;
-      height: 270px;
+      width: 250px;
+      height: 250px;
       position: relative;
       perspective: 900px;
     }
@@ -199,8 +248,8 @@
     }
 
     .slider-card {
-      width: 230px;
-      height: 230px;
+      width: 215px;
+      height: 215px;
       border-radius: 8px;
       position: absolute;
       background-size: cover;
@@ -217,23 +266,6 @@
       transform: scale(0.7);
     }
 
-    .slider-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 8px;
-      background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.85) 100%);
-    }
-
-    .slider-card-caption {
-      position: relative;
-      z-index: 2;
-      font-size: 11px;
-      font-weight: 700;
-      color: #fff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-
     .slider-card.active {
       transform: translateX(0) scale(1);
       z-index: 5;
@@ -242,13 +274,13 @@
     }
 
     .slider-card.prev {
-      transform: translateX(-40px) scale(0.86);
+      transform: translateX(-35px) scale(0.86);
       z-index: 3;
       opacity: 0.4;
     }
 
     .slider-card.next {
-      transform: translateX(40px) scale(0.86);
+      transform: translateX(35px) scale(0.86);
       z-index: 3;
       opacity: 0.4;
     }
@@ -279,12 +311,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       padding: 0 4px;
     }
 
-    .track-title { font-size: 19px; font-weight: 700; color: #fff; }
-    .track-artist { font-size: 13px; color: #b3b3b3; margin-top: 3px; }
+    .track-title { font-size: 18px; font-weight: 700; color: #fff; }
+    .track-artist { font-size: 12px; color: #b3b3b3; margin-top: 2px; }
 
     .like-btn { 
       background: none;
@@ -311,7 +343,7 @@
     }
 
     .progress-area { 
-      margin-bottom: 10px; 
+      margin-bottom: 8px; 
       padding: 0 4px;
     }
 
@@ -354,7 +386,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       padding: 0 16px;
     }
 
@@ -370,13 +402,13 @@
     .control-btn:active { transform: scale(0.85); color: #fff; }
 
     .play-main-btn {
-      width: 56px;
-      height: 56px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: #1db954;
       color: #000;
       border: none;
-      font-size: 22px;
+      font-size: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -389,9 +421,9 @@
 
     /* Spotify Dynamic Lyrics Card */
     .lyrics-card {
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 18px;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
       backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       cursor: pointer;
@@ -405,19 +437,19 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       color: #1db954;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .lyrics-preview-container {
-      max-height: 86px;
+      max-height: 65px;
       overflow-y: hidden;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       scroll-behavior: smooth;
     }
 
@@ -426,7 +458,7 @@
       font-weight: 600;
       color: rgba(255, 255, 255, 0.35);
       transition: color 0.25s ease;
-      line-height: 1.4;
+      line-height: 1.3;
       word-break: break-word;
     }
 
@@ -440,7 +472,7 @@
       position: absolute;
       inset: 0;
       z-index: 100;
-      padding: 40px 20px 24px 20px; /* Padding atas modal ditambah */
+      padding: 40px 20px 24px 20px;
       flex-direction: column;
       animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       transition: background 0.4s ease;
@@ -512,13 +544,22 @@
       font-size: 19px;
     }
 
-    /* Playlist Section */
-    .playlist-section { margin-bottom: 14px; }
+    /* Glassmorphism Design pada Down Bar (Playlist Section) */
+    .playlist-section { 
+      margin-bottom: 10px; 
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
 
     .playlist-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -528,7 +569,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 8px;
+      padding: 8px 8px;
       border-radius: 8px;
       transition: background 0.2s;
       cursor: pointer;
@@ -536,7 +577,7 @@
     }
 
     .playlist-item:active, .playlist-item.active {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
     }
 
     .item-left {
@@ -576,13 +617,262 @@
       font-size: 12px;
       color: #b3b3b3;
     }
+
+    /* =========================================
+       SPOTIFY LIBRARY / PLAYLIST THEME FOR SLIDESHOW
+       ========================================= */
+    #slideshow-screen {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: #121212;
+      z-index: 150;
+      flex-direction: column;
+      padding: 16px;
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    #slideshow-screen.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #slideshow-screen::-webkit-scrollbar { width: 4px; }
+    #slideshow-screen::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+    .lib-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .lib-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lib-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      background-color: #333;
+      flex-shrink: 0;
+    }
+
+    .lib-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      max-width: 260px;
+    }
+
+    /* Tombol Panah Kembali yang Elegan & Bagus */
+    .lib-back-arrow {
+      font-size: 16px;
+      cursor: pointer;
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.1s;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .lib-back-arrow:active { transform: scale(0.9); background: rgba(255,255,255,0.25); }
+
+    .lib-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .lib-pill {
+      background: #2a2a2a;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .lib-pill.active {
+      background: #1db954;
+      color: #000;
+    }
+
+    .lib-sort-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #b3b3b3;
+      margin-bottom: 12px;
+    }
+
+    /* Grid Album / Foto ala Grid Spotify Library */
+    .lib-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding-bottom: 20px;
+    }
+
+    .lib-card {
+      background: #181818;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
+    }
+
+    .lib-card:active { transform: scale(0.97); }
+    .lib-card:hover { background: #282828; }
+
+    .lib-card-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 6px;
+      background-size: cover;
+      background-position: center;
+      background-color: #333;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .lib-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lib-card-sub {
+      font-size: 11px;
+      color: #b3b3b3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* =========================================
+       POP-UP FOTO DETAIL DENGAN CAPTION
+       ========================================= */
+    #photo-popup {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 200;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #photo-popup.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .popup-card {
+      background: #181818;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 340px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+      animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background-size: cover;
+      background-position: center;
+      background-color: #222;
+    }
+
+    .popup-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .popup-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .popup-caption {
+      font-size: 13px;
+      color: #b3b3b3;
+      line-height: 1.4;
+    }
+
+    .popup-close-btn {
+      margin-top: 14px;
+      background: #1db954;
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .lib-title {
+      font-size: 18px; /* Ubah dari 14px menjadi 18px atau sesuai keinginan */
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      max-width: 260px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Audio Element -->
+  <!-- Audio Elements -->
   <audio id="real-audio-player" preload="metadata"></audio>
-  <audio id="click-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+  <audio id="bg-gallery-audio" loop preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3" type="audio/mpeg">
+  </audio>
 
   <div class="app-container" id="app-box">
     
@@ -595,19 +885,27 @@
       <div class="lock-sub">Dedicated to Malik Baskara</div>
       <input type="password" id="pw-input" class="pw-input" inputmode="numeric" maxlength="6" placeholder="••••••" onkeydown="if(event.key==='Enter') checkPasscode()">
       <button class="unlock-btn" onclick="checkPasscode()">Unlock</button>
-      <div id="error-msg" class="error-msg">Kode otentikasi tidak valid. Akses ditolak.</div>
+      <div id="error-msg" class="error-msg">SALAAH, masa iya aa lupaaa??</div>
     </div>
 
     <!-- Main Player Screen -->
     <div id="player-screen">
       
       <div class="player-header">
-        <span style="font-size: 18px; cursor: pointer;">❮</span>
-        <div>
+        <!-- Tanda Kembali (Kiri Atas) -->
+        <div class="back-btn-icon" onclick="openSlideshow()" title="Lihat Library Kenangan">❮</div>
+        
+        <div class="header-center">
           <div class="header-subtitle">PLAYING FROM PLAYLIST</div>
           <div class="header-title">99,9% in love with you</div>
         </div>
-        <span style="font-size: 18px; cursor: pointer;">•••</span>
+        <div style="position: relative; width: 24px; text-align: right;">
+          <span id="menu-dots" style="font-size: 18px; cursor: pointer; padding: 4px;" onclick="toggleDropdown(event)">•••</span>
+          <div id="dropdown-menu" class="dropdown-menu">
+            <a href="https://t.me/acherryi" target="_blank" class="dropdown-item">Who made this?</a>
+            <a href="https://open.spotify.com/playlist/7LytMW8M241SSKtoiSdMBE?si=842e9e40aaf54328" target="_blank" class="dropdown-item">Another Playlist</a>
+          </div>
+        </div>
       </div>
 
       <!-- Album Cover / Media Area -->
@@ -665,7 +963,7 @@
         <div class="lyrics-preview-container" id="lyrics-preview"></div>
       </div>
 
-      <!-- 3 Tracks Playlist -->
+      <!-- 3 Tracks Playlist (Glassmorphism Down Bar) -->
       <div class="playlist-section">
         <div class="playlist-title">
           <span>Tracks in Playlist</span>
@@ -690,7 +988,7 @@
             <div class="item-num" id="num-2">2</div>
             <div class="item-info">
               <div class="item-title">Hanya Untukmu</div>
-              <div class="item-sub">Ten2Five • 13 Moments</div>
+              <div class="item-sub">Ten2Five • Hanya Untukmu</div>
             </div>
           </div>
           <div class="item-right">
@@ -726,22 +1024,173 @@
       <div class="lyrics-modal-body" id="modal-lyrics-body"></div>
     </div>
 
+    <!-- ========================================= -->
+    <!-- SPOTIFY "YOUR LIBRARY" STYLE SCREEN       -->
+    <!-- ========================================= -->
+    <div id="slideshow-screen">
+      <!-- Header Library -->
+      <div class="lib-header">
+        <div class="lib-user-info" style="max-width: 82%;">
+          <div class="lib-avatar" style="background-image: url('gyj.1.jpg');"></div>
+          <div class="lib-title">The Moment i Realized That<br>I Love You</div>
+        </div>
+        <!-- Tombol Panah Kembali yang Lebih Bagus & Mirip Spotify -->
+        <div class="lib-back-arrow" onclick="closeSlideshow()" title="Kembali ke Pemutar">></div>
+      </div>
+
+      <!-- Filter Pills -->
+      <div class="lib-filters">
+        <div class="lib-pill active">Playlists</div>
+        <div class="lib-pill">Moment</div>
+      </div>
+
+      <!-- Sort & View -->
+      <div class="lib-sort-row">
+        <span>↕ Recents</span>
+        <span>☰</span>
+      </div>
+
+      <!-- Grid 10 Momen Kenangan -->
+      <div class="lib-grid">
+        <div class="lib-card" onclick="openPhotoPopup('1l.jpeg', 'Moment 1', 'wkwkw ini lucu karna aa ngerti kenapa i tiba tiba diem, KARNA GUE YA CEMBURU. and you realize that')">
+          <div class="lib-card-img" style="background-image: url('1l.jpeg');"></div>
+          <div class="lib-card-title">1</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('2l.jpeg', 'Moment 2', 'the way you called me geulis every fuckin time, sampe sekarang loh yaaa')">
+          <div class="lib-card-img" style="background-image: url('2l.jpeg');"></div>
+          <div class="lib-card-title">2</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('3l.jpeg', 'Moment 3', 'ternyata dari dulu sampai sekarang aa tuh ga pernah berubah, aa selalu kasi sweet text pas i udah tidur.')">
+          <div class="lib-card-img" style="background-image: url('3l.jpeg');"></div>
+          <div class="lib-card-title">3</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('4l.jpeg', 'Moment 4', 'aa selalu ngerti dan ga gengsi buat minta maaf buat hal kecil yang aku ga perlu minta lagi SALTING GUA SALTING')">
+          <div class="lib-card-img" style="background-image: url('4l.jpeg');"></div>
+          <div class="lib-card-title">4</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('5l.jpeg', 'Moment 5', 'ini juga, seneng deh kalau aa minta di tag gini. ngerasa dihargain ajaa hehehe')">
+          <div class="lib-card-img" style="background-image: url('5l.jpeg');"></div>
+          <div class="lib-card-title">5</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('6l.jpeg', 'Moment 6', 'demi apapun pas awal awal tuh i kaya hah kok bisa ini orang konsisten nyeimbangin gue? dia bahkan sering fpap buat ngabarinnn')">
+          <div class="lib-card-img" style="background-image: url('6l.jpeg');"></div>
+          <div class="lib-card-title">6</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('7l.jpeg', 'Moment 7', 'aa ga pernah gengsi kalau lagi kangen wkwk jadi kaya lucu aja')">
+          <div class="lib-card-img" style="background-image: url('7l.jpeg');"></div>
+          <div class="lib-card-title">7</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('8l.jpeg', 'Moment 8','i suka bangett kalo aa tuh ngomong sweet gnikmadjosdji dsini i salting berat.')">
+          <div class="lib-card-img" style="background-image: url('8l.jpeg');"></div>
+          <div class="lib-card-title">8</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('9l.jpeg', 'Moment 9', 'the way aa selalu memikirkan hal kecil yang bahkan aku ga sadarin')">
+          <div class="lib-card-img" style="background-image: url('9l.jpeg');"></div>
+          <div class="lib-card-title">9</div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+        <div class="lib-card" onclick="openPhotoPopup('10l.jpeg','Moment 10','Disini kita juga belum ada hubungan apa apa tapi aa selalu memastikan kalau aku bisa ngabdelin aa kapan aja')">
+          <div class="lib-card-img" style="background-image: url('10l.jpeg');"></div>
+          <div class="lib-card-title">10 </div>
+          <div class="lib-card-sub">Playlist • love</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- POP-UP DETAIL FOTO DENGAN CAPTION         -->
+    <!-- ========================================= -->
+    <div id="photo-popup" onclick="closePhotoPopup()">
+      <div class="popup-card" onclick="event.stopPropagation()">
+        <div class="popup-img" id="popup-img"></div>
+        <div class="popup-content">
+          <div class="popup-title" id="popup-title">Title</div>
+          <div class="popup-caption" id="popup-caption">Caption goes here...</div>
+          <button class="popup-close-btn" onclick="closePhotoPopup()">Tutup</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
+    // Suara Interaktif Global
     document.addEventListener('click', function(e) {
-      const isClickable = e.target.closest('button, .playlist-item, .slider-nav, .lyrics-modal-close, .lyrics-card, .progress-bar-container, .modal-lyric-line, .unlock-btn');
+      const isClickable = e.target.closest('button, .playlist-item, .slider-nav, .lyrics-modal-close, .lyrics-card, .progress-bar-container, .modal-lyric-line, .unlock-btn, #menu-dots, .dropdown-item, .back-btn-icon, .lib-back-arrow, .lib-card, .lib-pill, .popup-close-btn');
       if (isClickable) {
-        const clickSfx = document.getElementById('click-sound');
-        if (clickSfx) {
-          clickSfx.currentTime = 0;
-          clickSfx.volume = 0.15;
-          clickSfx.play().catch(err => console.warn("Efek klik:", err));
-        }
+        const clickSfx = new Audio("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3");
+        clickSfx.volume = 0.25;
+        clickSfx.play().catch(err => console.warn("Audio klik diblokir browser:", err));
+      }
+
+      // Menutup dropdown jika klik di luar area menu titik 3
+      if (!e.target.closest('#menu-dots') && !e.target.closest('#dropdown-menu')) {
+        document.getElementById('dropdown-menu').style.display = 'none';
       }
     });
 
-    // Helper untuk konversi format string "mm:ss" atau detik murni jadi format detik murni
+    // Fungsi Navigasi Library Screen dengan Animasi Smooth & Backsound Control
+    function openSlideshow() {
+      const screen = document.getElementById('slideshow-screen');
+      screen.style.display = 'flex';
+      requestAnimationFrame(() => {
+        screen.classList.add('show');
+      });
+
+      // Putar musik latar khusus galeri
+      const bgAudio = document.getElementById('bg-gallery-audio');
+      bgAudio.volume = 0.3;
+      bgAudio.play().catch(err => console.warn("Audio galeri diblokir browser:", err));
+    }
+
+    function closeSlideshow() {
+      const screen = document.getElementById('slideshow-screen');
+      screen.classList.remove('show');
+      setTimeout(() => {
+        screen.style.display = 'none';
+      }, 350);
+
+      // Matikan musik latar galeri saat kembali ke playlist
+      const bgAudio = document.getElementById('bg-gallery-audio');
+      bgAudio.pause();
+      bgAudio.currentTime = 0;
+    }
+
+    // Fungsi Pop-Up Foto dan Caption
+    function openPhotoPopup(imgUrl, title, caption) {
+      document.getElementById('popup-img').style.backgroundImage = `url('${imgUrl}')`;
+      document.getElementById('popup-title').innerText = title;
+      document.getElementById('popup-caption').innerText = caption;
+      
+      const popup = document.getElementById('photo-popup');
+      popup.style.display = 'flex';
+      requestAnimationFrame(() => {
+        popup.classList.add('show');
+      });
+    }
+
+    function closePhotoPopup() {
+      const popup = document.getElementById('photo-popup');
+      popup.classList.remove('show');
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 300);
+    }
+
+    function toggleDropdown(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('dropdown-menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
     function parseLyrics(lines) {
       return lines.map((item, idx) => {
         if (typeof item === 'string') {
@@ -833,17 +1282,24 @@
         modalBg: "linear-gradient(180deg, #1e3a8a 0%, #121212 75%)",
         bgColor: "linear-gradient(135deg, #2563eb, #1e3a8a)",
         isSlider: true,
-        photos: [
-          "1s.jpeg", "2s.jpeg", "3s.jpeg", "4s.jpeg", "5s.jpeg",
-          "6s.jpeg", "7s.jpeg", "8s.jpeg", "9s.jpeg", "10s.jpeg",
-          "11s.jpeg", "12s.jpeg", "13s.jpeg"
-        ],
-        header: "TRACK 02 • 13 MOMENTS",
+        photos: Array.from({length: 35}, (_, i) => `${i + 1}s.jpeg`),
+        header: "TRACK 02 • HANYA UNTUKMU",
         lines: [
           { t: "0:21", text: "Inikah rasanya bila ku sedang jatuh cinta" },
-          { t: "0:33", text: "Setiap hela nafasku bahagia" },
-          { t: "0:44", text: "Mengenal hatimu hadirkan indahnya dunia" },
-          { t: "0:56", text: "Kau bawa irama cinta di jiwa" }
+          { t: "0:30", text: "Setiap hela nafasku bahagia" },
+          { t: "0:39", text: "Mengenal hatimu hadirkan indahnya dunia" },
+          { t: "0:56", text: "Kau bawa irama cinta di jiwa" },
+          { t: "1:15", text: "Semua yang kumau hanyalah dirimu satu" },
+          { t: "1:33", text: "Kaulah jawaban semua doa" },
+          { t: "1:53", text: "Semua yang kurasa rindu dalam asa di dekap cinta" },
+          { t: "2:08", text: "Hatiku untukmu" },
+          { t: "2:19", text: "Haruskah diriku bertanya pada bintang-bintang" },
+          { t: "2:37", text: "Pantaskah 'ku mengharap cintanya" },
+          { t: "2:57", text: "Semua yang kumau hanyalah dirimu satu" },
+          { t: "3:07", text: "Kaulah pelita di dalam jiwa" },
+          { t: "3:16", text: "Semua yang kurasa rindu dalam asa di dekap cinta" },
+          { t: "3:34", text: "Hatiku untukmu" },
+          { t: "3:46", text: "Hanyalah untukmu" }
         ]
       },
       3: {
@@ -861,11 +1317,11 @@
           { t: "0:00", text: "Halo... halo halo halo! Selamat datang lagi di podcast paling eksklusif, paling private sejagat raya." },
           { t: "0:09", text: "Yang pendengar ini pastinya VIP karena cuma satu orang di dunia, yaitu pacar aku, Aa Malik, yang bisa buka web ini..." },
           { t: "0:19", text: "...dan bisa ndengerin podcast atau apa ya sebutannya ini ya? VN ya? Eh bukan VN deh, podcast-lah ya." },
-          { t: "0:26", text: "Podcast ini dengan aku, Cherie Aurelie, host kesayangan Aa—eh, pacar kesayangan, deng—" },
+          { t: "0:26", text: "Podcast ini dengan aku, Cherry Aurelie, host kesayangan Aa—eh, pacar kesayangan, deng—" },
           { t: "0:35", text: "...yang bakal nemenin Aa buat ngelihat apa sih yang bikin aku, eh apa sih yang aku bikin di sini di spesial hari ini." },
           { t: "0:46", text: "Kenapa sih spesial? Karena hari ini kita lagi ngerayain mensiv kita yang ketiga. Iya, betul, ketiga, ya." },
           { t: "0:57", text: "Gila ya Aa, 3 bulan lho. Kalau dipikir-pikir cepat banget." },
-          { t: "1:04", text: "Padahal semenjak tanggal 29 Juli, itu tuh kita masih malu-malu—eh enggak deng, kita enggak pernah malu-malu deh." },
+          { t: "1:04", text: "Padahal semenjak tanggal 29 Juni, itu tuh kita masih malu-malu—eh enggak deng, kita enggak pernah malu-malu deh." },
           { t: "1:13", text: "Rasanya tuh kayak baru kemarin sumpah, kita tuh baru kemarin aku bikinin Aa yang mensiv ke-2 bulan itu, tiba-tiba sudah ketiga gitu ya." },
           { t: "1:23", text: "Oke, lewat ini, aku cuma mau ngambil waktu buat appreciation post jalur suara." },
           { t: "1:30", text: "Aku mau bilang makasih, makasih banyak sama pacar aku." },
@@ -875,7 +1331,7 @@
           { t: "1:53", text: "Habis ngajar bimbel, atau pas aku lagi kepanasan, atau pas lagi mati lampu. Eh, Balikpapan emang banyak ininya ya, gedebak-gedebuknya." },
           { t: "2:05", text: "Kok bisa ya ada orang kayak Aa ya?" },
           { t: "2:09", text: "Aku... ini kita bicara santai ya. Kok bisa ada orang yang senyaman ini buat dijadiin tempat pulang?" },
-          { t: "2:19", text: "Selalu ya, selalu siap dengerin celotehan aku, sekocak apa pun itu." },
+          { t: "2:19", text: "aa tuh ya, selalu siap dengerin celotehan aku, sekocak apa pun itu." },
           { t: "2:24", text: "Bahkan pas aku lagi sibuk-sibuknya ngurusin UKM, ngurusin tugas bahasa Inggris itu, Aa tuh bisa ngertiin, bisa nyesuaiin aku." },
           { t: "2:34", text: "Kayak, you are the best support system ever." },
           { t: "2:38", text: "Eh maaf ya Aa, kalau selama 3 bulan ini aku masih suka banyak kurangnya." },
@@ -887,16 +1343,15 @@
           { t: "3:22", text: "Oke, selanjutnya, harapan aku buat kita ke depannya semoga kita berdua makin sabar, makin bisa nurunin ego masing-masing..." },
           { t: "3:34", text: "...makin saling ngertiin, dan tentunya makin banyak momen seru yang bisa kita jalanin bareng-bareng." },
           { t: "3:42", text: "Aku enggak sabar banget buat kayak ngerayain mensiv-mensiv selanjutnya." },
-          { t: "3:48", text: "Mensiv ke-4, ke-5, ke-6, ke-7, ke-8, ke-9, ke-10, ke-11, ke-1 tahun! Kayak, oh my God. Enggak sabar deh." },
-          { t: "3:59", text: "Oke deh, sekian dari aku, Cherie Aurelie atau biasa dipanggil Cherie dari host favorit Aa." },
+          { t: "3:48", text: "Mensive ke-4, ke-5, ke-6, ke-7, ke-8, ke-9, ke-10, ke-11, ke-1 tahun! Kayak, oh my God. Enggak sabar deh." },
+          { t: "3:59", text: "Oke deh, sekian dari aku, Cherry Aurelie atau biasa dipanggil Cherry dari host favorit Aa." },
           { t: "4:06", text: "Jangan lupa senyum hari ini dan jangan lupa buat di-like ya. Itu kan ada tombol like-nya ya di sebelah kanan." },
           { t: "4:14", text: "Biar kalau pengin dengerin lagi, bisa di... eh bisa dibuka lagi sih sebenarnya." },
-          { t: "4:23", text: "Oke, happy 3rd-mensiv ya Aa sayang. I love you so much, more than you know, more than my mind can define. Mwah!" }
+          { t: "4:23", text: "Oke, happy 3rd-mensiv ya Aa sayangg. I love you so much, more than you know, more than my mind can define. Mwah!" }
         ]
       }
     };
 
-    // Pre-calculate parsed lyrics
     const tracks = {};
     for (let key in rawTracks) {
       tracks[key] = {
@@ -912,8 +1367,22 @@
     let isDragging = false;
     let isUserScrollingModal = false;
     let scrollTimeout;
+    let alertClickCount = 0;
 
     const audioPlayer = document.getElementById('real-audio-player');
+
+    const alertMessages = [
+      "Pesan 1/10: Halo Aa sayangg! Jangan bosan-bosan klik yaa wkwkwk.",
+      "Pesan 2/10: Sengaja dibikin 10 kali biar Aa penasaran isinya apa aja 😋",
+      "Pesan 3/10: Makasih ya udah nemenin aku selama 3 bulan resmi jadian ini ❤️",
+      "Pesan 4/10: Aa tahu nggak? Aa tuh pacar paling pengertian sedunia!",
+      "Pesan 5/10: Jangan cemberut mulu dong, senyum dulu dikit buat aku 😊",
+      "Pesan 6/10: Sebentar lagi mau nyampe pesan ke-10 nih, siap-siap yaa!",
+      "Pesan 7/10: Semangat terus ya kuliah dan aktivitas hariannya, pacar aku hebat banget!",
+      "Pesan 8/10: Kalau capek, ingat ada aku di sini yang selalu dukung Aa 🤗",
+      "Pesan 9/10: Dikit lagi mau habis nih pesannya... Penasaran nggak pesan terakhirnya apa?",
+      "Pesan 10/10: Yeay! Pesan terakhir: I love you so much yesterday, today, and forever, Aa Baskara! 💕"
+    ];
 
     function checkPasscode() {
       const input = document.getElementById('pw-input').value.trim();
@@ -1011,7 +1480,7 @@
       if (badge) badge.innerText = formatTime(dur);
 
       const track = tracks[currentTrackId];
-      if (typeof rawTracks[currentTrackId].lines[0] === 'string') {
+      if (currentTrackId === 1 && typeof rawTracks[1].lines[0] === 'string') {
         const step = dur / track.parsedLines.length;
         track.parsedLines.forEach((item, idx) => {
           item.t = idx * step;
@@ -1028,12 +1497,16 @@
         document.getElementById('progress-bar').style.width = pct + '%';
         document.getElementById('current-time').innerText = formatTime(currentSec);
 
-        syncLyricToTime(currentSec);
+        if (currentTrackId !== 1) {
+          syncLyricToTime(currentSec);
+        }
       }
     });
 
     audioPlayer.addEventListener('seeked', () => {
-      syncLyricToTime(audioPlayer.currentTime);
+      if (currentTrackId !== 1) {
+        syncLyricToTime(audioPlayer.currentTime);
+      }
     });
 
     function syncLyricToTime(currentTime) {
@@ -1076,17 +1549,21 @@
         mLine.innerText = item.text;
         
         mLine.onclick = () => {
-          if (audioPlayer.duration) {
-            audioPlayer.currentTime = item.t;
-            highlightCurrentLyric(index);
-            if (!isPlaying) playAudio();
+          if (currentTrackId === 1) {
+            highlightCurrentLyric(index, true); 
+          } else {
+            if (audioPlayer.duration) {
+              audioPlayer.currentTime = item.t;
+              highlightCurrentLyric(index);
+              if (!isPlaying) playAudio();
+            }
           }
         };
         modalContainer.appendChild(mLine);
       });
     }
 
-    function highlightCurrentLyric(index) {
+    function highlightCurrentLyric(index, isFromScroll = false) {
       currentLineIndex = index;
       const total = tracks[currentTrackId].parsedLines.length;
 
@@ -1098,12 +1575,12 @@
       }
 
       const activeP = document.getElementById(`prev-line-${index}`);
-      if (activeP) {
+      if (activeP && !isFromScroll) {
         activeP.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
       const activeM = document.getElementById(`modal-line-${index}`);
-      if (activeM && document.getElementById('lyrics-modal').style.display === 'flex' && !isUserScrollingModal) {
+      if (activeM && document.getElementById('lyrics-modal').style.display === 'flex' && !isUserScrollingModal && !isFromScroll) {
         activeM.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
@@ -1118,12 +1595,6 @@
         card.className = 'slider-card';
         card.id = `slide-${i}`;
         card.style.backgroundImage = `url('${photoName}')`;
-
-        const caption = document.createElement('span');
-        caption.className = 'slider-card-caption';
-        caption.innerText = `Moment #${i + 1} • `;
-
-        card.appendChild(caption);
         track.appendChild(card);
       });
 
@@ -1188,6 +1659,28 @@
     modalBody.addEventListener('scroll', () => {
       isUserScrollingModal = true;
       clearTimeout(scrollTimeout);
+      
+      const modalRect = modalBody.getBoundingClientRect();
+      const centerY = modalRect.top + modalRect.height / 2;
+
+      const lines = modalBody.querySelectorAll('.modal-lyric-line');
+      let closestIdx = 0;
+      let minDistance = Infinity;
+
+      lines.forEach((line, idx) => {
+        const lineRect = line.getBoundingClientRect();
+        const lineCenter = lineRect.top + lineRect.height / 2;
+        const dist = Math.abs(centerY - lineCenter);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestIdx = idx;
+        }
+      });
+      
+      if (closestIdx !== currentLineIndex) {
+        highlightCurrentLyric(closestIdx, true); 
+      }
+
       scrollTimeout = setTimeout(() => {
         isUserScrollingModal = false;
       }, 1200);
@@ -1196,13 +1689,24 @@
     function nextTrack() {
       let nextId = currentTrackId + 1;
       if (nextId > 3) nextId = 1;
+      if (nextId === 3) {
+        triggerNotificationAlert();
+      }
       switchTrack(nextId);
     }
 
     function prevTrack() {
       let prevId = currentTrackId - 1;
       if (prevId < 1) prevId = 3;
+      if (prevId === 3) {
+        triggerNotificationAlert();
+      }
       switchTrack(prevId);
+    }
+
+    function triggerNotificationAlert() {
+      alert(alertMessages[alertClickCount]);
+      alertClickCount = (alertClickCount + 1) % alertMessages.length;
     }
 
     function togglePlay() {
@@ -1245,7 +1749,9 @@
       document.getElementById('progress-bar').style.width = (pos * 100) + '%';
       document.getElementById('current-time').innerText = formatTime(targetSec);
 
-      syncLyricToTime(targetSec);
+      if (currentTrackId !== 1) {
+        syncLyricToTime(targetSec);
+      }
     }
 
     progressContainer.addEventListener('pointerdown', (e) => {
